@@ -1,7 +1,6 @@
 *my_env
 db.sqlite3
 act.sh
-<<<<<<< HEAD
 .vscode
 *.log
 *.pot
@@ -9,13 +8,3 @@ act.sh
 */*/*/__pycache__/
 */*/__pycache__/
 */__pycache__/
-=======
-mysite/__pycache__
-mysite/__init_.py
-blog/__pycache__/*
-.vscode
-__init_.py
-__pycache__
-*cpython
-cpython*
->>>>>>> taggit
