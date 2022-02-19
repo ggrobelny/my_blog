@@ -2,6 +2,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
+from taggit.models import Tag
 from .models import Comment, Post
 from django.db.models import Count
 from .forms import EmailPostForm, CommentForm
@@ -30,9 +31,15 @@ def post_share(request, post_id):
         form = EmailPostForm()
         return render(request, 'blog/post/share.html', {'post': post,'form': form, 'sent': sent})
 
-def post_list(request):
+def post_list(request, tag_slug=None):
     # posts = Post.published.all()
     object_list = Post.published.all()
+    tag = None
+
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        object_list = object_list.filter(tags__in=[tag])
+
     paginator = Paginator(object_list, 3) # Trzy posty na każdej stronie.
     page = request.GET.get('page')
     try:
@@ -45,7 +52,7 @@ def post_list(request):
     # Jeżeli zmienna page ma wartość większą niż numer ostatniej strony
     # wyników, wtedy pobierana jest ostatnia strona wyników.
         posts = paginator.page(paginator.num_pages)
-    return render(request,'blog/post/list.html', {'page': page, 'posts': posts})
+    return render(request,'blog/post/list.html', {'page': page, 'posts': posts, 'tag': tag})
 
 
 
@@ -56,6 +63,7 @@ class PostListView(ListView):
     template_name = 'blog/post/list.html'
 
 def post_detail(request, year, month, day, post):
+    # Lista podobnych postów.
     post = get_object_or_404(Post, slug=post, status='published', publish__year=year, publish__month=month, publish__day=day)
     # Lista aktywnych komentarzy dla danego posta.
     comments = post.comments.filter(active=True)
@@ -72,5 +80,10 @@ def post_detail(request, year, month, day, post):
             new_comment.save()
     else:
         comment_form = CommentForm()
-    return render(request, 'blog/post/detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form})
+
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
+
+    return render(request, 'blog/post/detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form, 'similar_posts': similar_posts})
 
