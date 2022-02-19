@@ -39,6 +39,5 @@ startVenv(){
     # echo -r $nazwave "Wpisz: "
     # read nazwave
     source my_env/bin/activate
-    $SHELL
 }
 menu

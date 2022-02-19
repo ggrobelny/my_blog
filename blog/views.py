@@ -2,6 +2,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
+from taggit.models import Tag
 from .models import Comment, Post
 from django.db.models import Count
 from .forms import EmailPostForm, CommentForm
@@ -30,9 +31,15 @@ def post_share(request, post_id):
         form = EmailPostForm()
         return render(request, 'blog/post/share.html', {'post': post,'form': form, 'sent': sent})
 
-def post_list(request):
+def post_list(request, tag_slug=None):
     # posts = Post.published.all()
     object_list = Post.published.all()
+    tag = None
+
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        object_list = object_list.filter(tags__in=[tag])
+
     paginator = Paginator(object_list, 3) # Trzy posty na każdej stronie.
     page = request.GET.get('page')
     try:
@@ -45,7 +52,7 @@ def post_list(request):
     # Jeżeli zmienna page ma wartość większą niż numer ostatniej strony
     # wyników, wtedy pobierana jest ostatnia strona wyników.
         posts = paginator.page(paginator.num_pages)
-    return render(request,'blog/post/list.html', {'page': page, 'posts': posts})
+    return render(request,'blog/post/list.html', {'page': page, 'posts': posts, 'tag': tag})
 
 
 

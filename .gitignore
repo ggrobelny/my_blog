@@ -1,3 +1,9 @@
 *my_env
 db.sqlite3
 act.sh
+mysite/__pycache__
+mysite/__init_.py
+blog/__pycache__/*
+.vscode
+__init_.py
+__pycache__
