@@ -7,3 +7,5 @@ blog/__pycache__/*
 .vscode
 __init_.py
 __pycache__
+*cpython
+cpython*

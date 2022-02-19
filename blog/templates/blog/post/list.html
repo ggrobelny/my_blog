@@ -1,5 +1,5 @@
 {% extends "blog/base.html" %}
-{% include "pagination.html" with page=posts %}
+{% comment %} {% include "pagination.html" with page=posts %} {% endcomment %}
 
 {% block title %}Mój blog{% endblock %}
 
@@ -25,6 +25,6 @@
 </p>
   {{ post.body|truncatewords:30|linebreaks }}
   {% endfor %}
-  
-  {% include "pagination.html" with page=page_obj %}
+  {% comment %} {% include "pagination.html" with page=page_obj %} {% endcomment %}
+  {% include "pagination.html" with page=posts %}
 {% endblock %}
