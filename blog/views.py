@@ -5,7 +5,7 @@ from django.views.generic import ListView
 from taggit.models import Tag
 from .models import Comment, Post
 from django.db.models import Count
-from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .forms import EmailPostForm, CommentForm, SearchForm
 from django.core.mail import send_mail
 
@@ -18,9 +18,16 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
+            search_vector = SearchVector('title', weight='A') + SearchVector('body', weight='B')
+            search_query = SearchQuery(query)
             results = Post.objects.annotate(
-                search=SearchVector('title', 'body'),
-            ).filter(search=query)
+                          #search=search_vector,
+                          rank=SearchRank(search_vector, search_query)
+                        #).filter(search=search_query).order_by('-rank')
+                        ).filter(rank__gte=0.3).order_by('-rank')
+            # results = Post.objects.annotate(
+            #     search=SearchVector('title', 'body'),
+            # ).filter(search=query)
     return render(request, 'blog/post/search.html', {'form': form,'query': query,'results': results})
 
 def post_share(request, post_id):
