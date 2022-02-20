@@ -8,6 +8,7 @@ from django.db.models import Count
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .forms import EmailPostForm, CommentForm, SearchForm
 from django.core.mail import send_mail
+from django.contrib.postgres.search import TrigramSimilarity
 
 
 def post_search(request):
@@ -21,13 +22,12 @@ def post_search(request):
             search_vector = SearchVector('title', weight='A') + SearchVector('body', weight='B')
             search_query = SearchQuery(query)
             results = Post.objects.annotate(
-                          #search=search_vector,
-                          rank=SearchRank(search_vector, search_query)
-                        #).filter(search=search_query).order_by('-rank')
-                        ).filter(rank__gte=0.3).order_by('-rank')
-            # results = Post.objects.annotate(
-            #     search=SearchVector('title', 'body'),
-            # ).filter(search=query)
+                similarity=TrigramSimilarity('title', query),
+            ).filter(similarity__gt=0.1).order_by('-similarity')
+                        #   #search=search_vector,
+                        #   rank=SearchRank(search_vector, search_query)
+                        # #).filter(search=search_query).order_by('-rank')
+                        # ).filter(rank__gte=0.3).order_by('-rank')
     return render(request, 'blog/post/search.html', {'form': form,'query': query,'results': results})
 
 def post_share(request, post_id):
