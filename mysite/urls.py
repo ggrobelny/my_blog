@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from blog.views import post_detail, post_list
+from blog.views import post_detail, post_list, home_page, about_page, contact_page
 from django.contrib.sitemaps.views import sitemap
 from blog.sitemaps import PostSitemap
 
@@ -31,6 +31,9 @@ urlpatterns = [
     path('', post_list, name='post_list'),
     path('<int:year>/<int:month>/<int:day>/<slug:post>/', post_detail, name='post_detail'),
     path('blog/', include('blog.urls', namespace='blog')),
-    path('sitemap.xml', sitemap, {'sitemaps': sitemaps},name='django.contrib.sitemaps.views.sitemap')
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps},name='django.contrib.sitemaps.views.sitemap'),
+    path('home/', home_page),
+    path('about/', about_page),
+    path('contact/', contact_page),
 ]
 

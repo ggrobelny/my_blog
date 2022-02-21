@@ -1,5 +1,5 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 from taggit.models import Tag
@@ -9,6 +9,18 @@ from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from .forms import EmailPostForm, CommentForm, SearchForm
 from django.core.mail import send_mail
 from django.contrib.postgres.search import TrigramSimilarity
+
+
+def home_page(request):
+    return HttpResponse("<h1>Help Desk Blog</h1>")
+
+
+def about_page(request):
+    return HttpResponse("<h1>About: Help Desk Blog</h1>")
+
+
+def contact_page(request):
+    return HttpResponse("<h1>Contact: Help Desk Blog</h1>")
 
 
 def post_search(request):
@@ -24,10 +36,7 @@ def post_search(request):
             results = Post.objects.annotate(
                 similarity=TrigramSimilarity('title', query),
             ).filter(similarity__gt=0.1).order_by('-similarity')
-                        #   #search=search_vector,
-                        #   rank=SearchRank(search_vector, search_query)
-                        # #).filter(search=search_query).order_by('-rank')
-                        # ).filter(rank__gte=0.3).order_by('-rank')
+
     return render(request, 'blog/post/search.html', {'form': form,'query': query,'results': results})
 
 def post_share(request, post_id):
@@ -105,4 +114,7 @@ def post_detail(request, year, month, day, post):
     similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
 
     return render(request, 'blog/post/detail.html', {'post': post, 'comments': comments, 'comment_form': comment_form, 'similar_posts': similar_posts})
+
+
+
 

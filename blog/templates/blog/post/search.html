@@ -5,7 +5,7 @@
 {% block content %}
   {% if "query" in request.GET %}
     <h1>Posty zawierające "{{ query }}"</h1>
-    <h3>Znaleziono {{ results.count }} wynik{{ results|pluralize:"i" }}</h3>
+    <h3>{{ results.count }} result{{ results|pluralize:"s" }}</h3>
     {% for post in results %}
         <h4><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h4>
         {{ post.body|truncatewords:5 }}
