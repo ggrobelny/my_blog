@@ -12,11 +12,11 @@ from django.contrib.postgres.search import TrigramSimilarity
 
 
 def home_page(request):
-    return HttpResponse("<h1>Help Desk Blog</h1>")
+    return render(request, 'blog/post/index.html')
 
 
 def about_page(request):
-    return HttpResponse("<h1>About: Help Desk Blog</h1>")
+    return render(request, 'blog/post/about.html')
 
 
 def contact_page(request):
