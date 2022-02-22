@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
 </head>
 <body>
+    {% include 'blog/post/navbar.html' %}
 <div id="content">
     {% block content %}
     {% endblock %}
