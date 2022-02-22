@@ -91,3 +91,12 @@ input[type=submit] {
     color:rgb(20, 40, 60);
 }
 
+.navbar {
+    margin:0;
+    height:53px;
+    display: inline;
+  }
+
+.navbar a:hover {
+    color: rgb(138, 7, 7);
+    }

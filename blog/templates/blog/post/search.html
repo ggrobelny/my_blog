@@ -4,15 +4,15 @@
 
 {% block content %}
   {% if "query" in request.GET %}
-    <h1>Posty zawierające "{{ query }}"</h1>
+    <h1>Posts containing "{{ query }}"</h1>
     <h3>{{ results.count }} result{{ results|pluralize:"s" }}</h3>
     {% for post in results %}
         <h4><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h4>
         {{ post.body|truncatewords:5 }}
     {% empty %}
-      <p>Brak wyników dla podanego zapytania.</p>
+      <p>No results for the specified query.</p>
     {% endfor %}
-    <p><a href="{% url "blog:post_search" %}">Szukaj ponownie</a></p>
+    <p><a href="{% url "blog:post_search" %}">Search posts</a></p>
   {% else %}
     <h1>Search posts</h1>
     <form action="." method="get">
