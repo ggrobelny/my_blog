@@ -100,3 +100,5 @@ input[type=submit] {
 .navbar a:hover {
     color: rgb(138, 7, 7);
     }
+
+nav a {display:inline-block;} 
