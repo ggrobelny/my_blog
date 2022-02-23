@@ -10,6 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'js/bootstrap.js' %}">
 </head>
 <body>
     {% include 'blog/post/navbar.html' %}
@@ -17,7 +18,6 @@
         {% block content %}
         {% endblock %}
       </div>
-      {% include 'blog/post/js.html' %}
 </div>
 
 <div id="sidebar">
